@@ -1,0 +1,123 @@
+[
+  {
+    "id": "research-portal",
+    "name": "Research Portal",
+    "organization": "Acme Research Systems",
+    "target": "research.lab",
+    "ip": "10.10.20.15",
+    "application": "Research Management Portal",
+    "environment": "Controlled internal web application",
+    "difficulty": "Intermediate",
+    "description": "A simulated research-management application containing controlled security assessment scenarios.",
+    "objective": "Perform an authorized security assessment of the simulated application and identify weaknesses affecting confidentiality, integrity or access control.",
+    "scope": {
+      "in_scope": [
+        "Web application",
+        "REST API",
+        "Authentication",
+        "Authorization",
+        "Application configuration"
+      ],
+      "out_of_scope": [
+        "Denial-of-service testing",
+        "Social engineering",
+        "Physical security",
+        "Third-party infrastructure"
+      ]
+    },
+    "services": [
+      {
+        "Port": 443,
+        "Protocol": "HTTPS",
+        "Service": "Web Application"
+      },
+      {
+        "Port": 8443,
+        "Protocol": "HTTPS",
+        "Service": "REST API"
+      }
+    ],
+    "dns_records": [
+      {
+        "Type": "A",
+        "Name": "research.lab",
+        "Value": "10.10.20.15"
+      },
+      {
+        "Type": "CNAME",
+        "Name": "api.research.lab",
+        "Value": "research-api.lab"
+      },
+      {
+        "Type": "TXT",
+        "Name": "research.lab",
+        "Value": "lab-verification=senselab"
+      }
+    ],
+    "http": {
+      "request": "GET /api/profile?id=1001 HTTP/1.1\nHost: research.lab\nUser-Agent: Mozilla/5.0\nCookie: session=LAB_SESSION",
+      "response": "HTTP/1.1 200 OK\nContent-Type: application/json\n\n{\n  \"user_id\": 1001,\n  \"name\": \"Research User\",\n  \"role\": \"analyst\"\n}"
+    },
+    "api_endpoints": [
+      {
+        "id": "profile",
+        "method": "GET",
+        "path": "/api/profile?id=1001",
+        "description": "Retrieve the simulated profile associated with a resource identifier.",
+        "response": "{\"user_id\":1001,\"role\":\"analyst\"}"
+      },
+      {
+        "id": "user-record",
+        "method": "GET",
+        "path": "/api/users/1002",
+        "description": "Controlled scenario representing access to another user's resource.",
+        "response": "{\"user_id\":1002,\"name\":\"Other User\",\"role\":\"analyst\"}"
+      },
+      {
+        "id": "reports",
+        "method": "GET",
+        "path": "/api/reports/45",
+        "description": "Retrieve a simulated research report.",
+        "response": "{\"report_id\":45,\"title\":\"Research Report\",\"owner_id\":1001}"
+      }
+    ],
+    "vulnerabilities": [
+      {
+        "id": "F001",
+        "title": "Broken Access Control",
+        "category": "Authorization",
+        "severity": "High",
+        "likelihood": 4,
+        "impact": 5,
+        "exploitability": 4,
+        "description": "A simulated normal user can access a resource belonging to another user because server-side authorization is not adequately enforced.",
+        "options": [
+          "Broken Access Control",
+          "DNS Misconfiguration",
+          "Cross-Site Scripting",
+          "Network Availability"
+        ],
+        "correct_answer": "Broken Access Control",
+        "remediation": "Enforce authorization server-side and verify that the authenticated user is permitted to access the requested resource."
+      },
+      {
+        "id": "F002",
+        "title": "Information Disclosure",
+        "category": "Information Disclosure",
+        "severity": "Medium",
+        "likelihood": 3,
+        "impact": 3,
+        "exploitability": 3,
+        "description": "A simulated response exposes unnecessary technical information that could assist further application analysis.",
+        "options": [
+          "Information Disclosure",
+          "Broken Access Control",
+          "Authentication Failure",
+          "DNS Hijacking"
+        ],
+        "correct_answer": "Information Disclosure",
+        "remediation": "Limit externally visible technical information and configure application responses to expose only information required by the client."
+      }
+    ]
+  }
+]
